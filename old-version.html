@@ -1,0 +1,1175 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>匯率手札｜人民幣每月觀察</title>
+
+<style>
+:root {
+  --ink: #19372e;
+  --green: #17694e;
+  --muted: #61756c;
+  --line: #dde5df;
+  --bg: #f5f7f2;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.65 system-ui, "Microsoft JhengHei", sans-serif;
+}
+
+header {
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+}
+
+nav {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand { font-weight: 800; font-size: 22px; }
+
+.brand span {
+  display: inline-grid;
+  place-items: center;
+  background: var(--green);
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  margin-right: 10px;
+}
+
+.sub { color: var(--muted); font-size: 13px; }
+
+main {
+  max-width: 1200px;
+  margin: auto;
+  padding: 34px 26px;
+}
+
+h1 {
+  font-size: clamp(27px, 4vw, 38px);
+  line-height: 1.3;
+  margin: 8px 0 12px;
+  letter-spacing: -1px;
+}
+
+h2 { font-size: 19px; margin: 0 0 5px; }
+p { margin: 6px 0; }
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--green);
+  font-weight: 700;
+}
+
+.hero, .toolbar, .row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.hero { margin-bottom: 25px; }
+
+.pill {
+  background: #e8f2eb;
+  color: var(--green);
+  padding: 7px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.toolbar {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+button, input, select {
+  font: inherit;
+  border: 1px solid #cbd8cf;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: white;
+  color: var(--ink);
+}
+
+button {
+  cursor: pointer;
+  font-weight: 600;
+  transition: .15s;
+}
+
+button:hover {
+  background: #edf5ee;
+  border-color: var(--green);
+}
+
+button.primary {
+  background: var(--green);
+  border-color: var(--green);
+  color: white;
+}
+
+button.primary:hover { background: #10513c; }
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible {
+  outline: 3px solid #b7b969;
+  outline-offset: 3px;
+}
+
+.notice {
+  font-size: 13px;
+  padding: 12px 16px;
+  background: #fff6da;
+  color: #755d24;
+  border-radius: 10px;
+  margin-bottom: 22px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  padding: 23px;
+  min-width: 0;
+}
+
+.metric {
+  font-size: 29px;
+  font-weight: 750;
+  letter-spacing: -1px;
+  font-variant-numeric: tabular-nums;
+  margin: 8px 0;
+}
+
+.label { font-size: 13px; color: var(--muted); }
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.75fr) minmax(290px, 1fr);
+  gap: 20px;
+}
+
+.chartbox { margin-top: 22px; }
+
+svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+svg text { font: 12px system-ui; fill: #73857c; }
+svg circle { cursor: pointer; outline: none; }
+
+svg circle:hover, svg circle:focus {
+  stroke: #19372e;
+  stroke-width: 4;
+}
+
+.chartinfo {
+  min-height: 30px;
+  font-size: 13px;
+  color: var(--green);
+  margin-top: 8px;
+}
+
+.change {
+  background: #eff5ef;
+  padding: 13px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 15px;
+}
+
+.field label { font-size: 13px; color: var(--muted); }
+input, select { max-width: 100%; min-width: 0; }
+input[type=number] { width: 100%; }
+
+.pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.result {
+  background: #193f32;
+  color: #fff;
+  border-radius: 12px;
+  padding: 22px;
+  margin-top: 22px;
+}
+
+.result .label { color: #bad1c0; }
+
+.result strong {
+  font-size: 31px;
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.result small { color: #cce0d1; }
+.records { margin-top: 20px; }
+
+.entry {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.4fr auto;
+  gap: 12px;
+  align-items: end;
+  margin: 16px 0;
+}
+
+.entry .field { margin: 0; }
+.tablewrap { overflow: auto; }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+th, td {
+  padding: 13px 12px;
+  border-bottom: 1px solid #edf0eb;
+  text-align: left;
+}
+
+th {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 500;
+  background: #f7f9f5;
+}
+
+td:nth-child(2) {
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+}
+
+td.source {
+  white-space: normal;
+  min-width: 150px;
+  max-width: 350px;
+  overflow-wrap: anywhere;
+}
+
+.small { padding: 5px 10px; font-size: 12px; }
+.danger { color: #9c4038; }
+
+.empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 48px 10px;
+}
+
+.footer {
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+details {
+  margin-top: 18px;
+  border-top: 1px solid var(--line);
+  padding-top: 15px;
+}
+
+summary { cursor: pointer; font-weight: 650; }
+
+#status {
+  font-size: 13px;
+  color: var(--green);
+  min-height: 24px;
+}
+
+#storageWarning {
+  background: #ffe4df;
+  color: #8c3329;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+}
+
+[hidden] { display: none !important; }
+
+@media (max-width: 850px) {
+  .grid { grid-template-columns: 1fr; }
+  .entry { grid-template-columns: 1fr 1fr; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  main { padding: 24px 15px; }
+  nav { padding: 15px; }
+  .card { padding: 18px; }
+  .metric { font-size: 25px; }
+  .toolbar { align-items: stretch; }
+  .controls { gap: 8px; }
+  .entry { grid-template-columns: 1fr; }
+  .sub.navtext { display: none; }
+  .hero .pill { display: none; }
+}
+</style>
+</head>
+
+<body>
+<header>
+  <nav>
+    <div class="brand"><span>匯</span>匯率手札</div>
+    <div class="sub navtext">每月觀察 · 輕鬆換算</div>
+    <div class="pill">CNY → TWD</div>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div>
+      <div class="eyebrow">YOUR MONTHLY CURRENCY NOTEBOOK</div>
+      <h1>看懂匯率，算好每一筆。</h1>
+      <p class="sub">人民幣兌新臺幣的每月觀察與購物試算工具。</p>
+    </div>
+    <div class="pill">1 人民幣 = 多少新臺幣</div>
+  </section>
+
+  <div id="storageWarning" role="alert" hidden></div>
+
+  <section class="toolbar" aria-label="資料篩選">
+    <div class="controls">
+      <label for="month">觀察月份</label>
+      <input type="month" id="month" required>
+
+      <select id="mode" aria-label="資料模式">
+        <option value="real">我的正式資料</option>
+        <option value="demo">模擬資料</option>
+      </select>
+    </div>
+
+    <button id="demoBtn">載入本月模擬資料 ↗</button>
+  </section>
+
+  <div class="notice" id="notice"></div>
+
+  <div class="stats">
+    <div class="card">
+      <div class="label">最新一筆匯率</div>
+      <div class="metric" id="latest">—</div>
+      <div class="sub" id="latestDate">尚無資料</div>
+    </div>
+
+    <div class="card">
+      <div class="label">本月最高</div>
+      <div class="metric" id="high">—</div>
+      <div class="sub">換取人民幣的成本較高</div>
+    </div>
+
+    <div class="card">
+      <div class="label">本月最低</div>
+      <div class="metric" id="low">—</div>
+      <div class="sub">換取人民幣的成本較低</div>
+    </div>
+
+    <div class="card">
+      <div class="label">本月平均</div>
+      <div class="metric" id="average">—</div>
+      <div class="sub" id="count">0 筆每日紀錄</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <section class="card">
+      <div class="row">
+        <div>
+          <h2>每月匯率走勢</h2>
+          <p class="sub">依已收錄的日期排列，單位：TWD / CNY</p>
+        </div>
+        <span class="pill" id="chartMonth"></span>
+      </div>
+
+      <div id="chart" class="chartbox"></div>
+
+      <div class="chartinfo" id="chartInfo" aria-live="polite">
+        點選圖表資料點，查看詳細匯率。
+      </div>
+
+      <div class="change" id="change">
+        新增至少兩筆資料，即可比較月內變動。
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>這筆購物要多少？</h2>
+      <p class="sub">輸入人民幣金額，試算新臺幣支出。</p>
+
+      <div class="field">
+        <label for="amount">人民幣金額（CNY）</label>
+        <input id="amount" type="number"
+               min="0" step="any" value="100" required>
+      </div>
+
+      <div class="pair">
+        <div class="field">
+          <label for="calcRate">試算匯率</label>
+          <input id="calcRate" type="number"
+                 min="0.00000001" step="any"
+                 placeholder="例如 4.5" required>
+        </div>
+
+        <div class="field">
+          <label for="fee">手續費（%）</label>
+          <input id="fee" type="number"
+                 min="0" step="any" value="1" required>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:12px">
+        <span class="sub" id="rateMode">請輸入試算匯率</span>
+        <button class="small" id="useLatest">使用最新匯率</button>
+      </div>
+
+      <div class="result" aria-live="polite">
+        <div class="label">預估總支出 · TWD</div>
+        <strong id="total">—</strong>
+        <small id="breakdown">輸入有效數字即可換算</small>
+      </div>
+
+      <p class="sub" style="margin-top:12px">
+        手續費按換算後金額計算；實際成交依銀行或支付平台為準。
+      </p>
+    </section>
+  </div>
+
+  <section class="card records">
+    <div class="row">
+      <div>
+        <h2>每日匯率紀錄</h2>
+        <p class="sub">同一天保留一筆；建議採用相同來源與匯率種類。</p>
+      </div>
+
+      <button id="exportBtn" class="small">匯出目前資料 CSV</button>
+    </div>
+
+    <form id="entry" class="entry">
+      <div class="field">
+        <label for="date">日期</label>
+        <input id="date" type="date" required>
+      </div>
+
+      <div class="field">
+        <label for="rate">匯率（1 CNY → TWD）</label>
+        <input id="rate" type="number"
+               min="0.00000001" step="any"
+               placeholder="例如 4.5000" required>
+      </div>
+
+      <div class="field">
+        <label for="source">來源及種類</label>
+        <input id="source" maxlength="120"
+               placeholder="例如：銀行名稱／即期賣出" required>
+      </div>
+
+      <div class="controls">
+        <button type="submit" class="primary" id="saveBtn">
+          新增紀錄
+        </button>
+        <button type="button" id="cancelBtn" hidden>取消</button>
+      </div>
+    </form>
+
+    <div id="status" role="status"></div>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th>日期</th>
+            <th>匯率 TWD / CNY</th>
+            <th>來源</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+
+    <div id="empty" class="empty">
+      這個月還沒有資料。新增第一筆，或載入模擬資料試用。
+    </div>
+  </section>
+
+  <div class="footer">
+    <p>
+      資料只保存在目前瀏覽器，不跨裝置同步。
+      清除瀏覽器資料可能使紀錄消失，建議匯出備份。
+      本機檔案與 GitHub Pages 的資料各自獨立。
+    </p>
+
+    <details>
+      <summary>使用方式與分析規則</summary>
+      <p>
+        ① 選擇月份與資料模式。
+        ② 輸入每日匯率，或載入模擬資料。
+        ③ 查看走勢與統計。
+        ④ 輸入金額與手續費試算。
+      </p>
+      <p>
+        月內變動率＝（最後一筆－第一筆）÷第一筆×100；
+        平均值為已收錄每日匯率的算術平均。
+        缺少的日期不補值，折線僅連接現有資料。
+        本網站不預測未來匯率，也不自動取得即時報價。
+      </p>
+      <p>
+        模擬資料與正式資料分開保存。
+        正式資料由使用者自行輸入與查證；
+        模擬值並非真實市場報價。
+      </p>
+    </details>
+  </div>
+</main>
+
+<script>
+"use strict";
+
+const $ = id => document.getElementById(id);
+const KEY = "cny-twd-notebook-v1";
+
+const today = (() => {
+  const d = new Date();
+  return (
+    `${d.getFullYear()}-` +
+    `${String(d.getMonth() + 1).padStart(2, "0")}-` +
+    `${String(d.getDate()).padStart(2, "0")}`
+  );
+})();
+
+let db = { real: [], demo: [] };
+let editing = null;
+let manual = false;
+
+// 日期與儲存資料檢查
+const validDate = s =>
+  /^\d{4}-\d{2}-\d{2}$/.test(s) &&
+  Number.isFinite(Date.parse(s)) &&
+  new Date(s + "T00:00:00Z").toISOString().slice(0, 10) === s;
+
+function validateData(v) {
+  return v && ["real", "demo"].every(k =>
+    Array.isArray(v[k]) &&
+    new Set(v[k].map(r => r.date)).size === v[k].length &&
+    v[k].every(r =>
+      validDate(r.date) &&
+      typeof r.rate === "number" &&
+      Number.isFinite(r.rate) &&
+      r.rate > 0 &&
+      typeof r.source === "string"
+    )
+  );
+}
+
+function warn(text) {
+  $("storageWarning").hidden = false;
+  $("storageWarning").textContent = text;
+}
+
+try {
+  const saved = localStorage.getItem(KEY);
+
+  if (saved) {
+    const value = JSON.parse(saved);
+    if (!validateData(value)) throw Error("invalid");
+    db = value;
+  }
+} catch (error) {
+  warn(
+    "無法讀取已儲存資料。此頁仍可試用；" +
+    "新增資料前請先確認瀏覽器儲存設定。"
+  );
+}
+
+function persist() {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(db));
+    return true;
+  } catch (error) {
+    warn(
+      "目前無法永久儲存！資料只會保留到關閉此頁，" +
+      "請先使用 CSV 匯出備份。"
+    );
+    return false;
+  }
+}
+
+// 取得所選月份與模式的資料
+function selected() {
+  return db[$("mode").value]
+    .filter(r => r.date.slice(0, 7) === $("month").value)
+    .sort((a, b) => a.date.localeCompare(b.date));
+}
+
+// 計算統計資訊
+function summarize(records) {
+  if (!records.length) return null;
+
+  const values = records.map(r => r.rate);
+
+  return {
+    last: records[records.length - 1],
+    high: Math.max(...values),
+    low: Math.min(...values),
+    average: values.reduce((sum, value) => sum + value, 0) /
+      values.length,
+    delta: values.length > 1
+      ? values[values.length - 1] - values[0]
+      : null,
+    percent: values.length > 1
+      ? (values[values.length - 1] - values[0]) / values[0] * 100
+      : null
+  };
+}
+
+function money(value) {
+  return value.toLocaleString("zh-TW", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
+function calculate(amount, rate, fee) {
+  return {
+    base: amount * rate,
+    fee: amount * rate * fee / 100,
+    total: amount * rate * (1 + fee / 100)
+  };
+}
+
+// 更新換算結果
+function calc() {
+  const amount = Number($("amount").value);
+  const rate = Number($("calcRate").value);
+  const fee = Number($("fee").value);
+
+  const invalidInput = ["amount", "calcRate", "fee"].some(
+    id => !$(id).value || !$(id).checkValidity()
+  );
+
+  if (
+    invalidInput ||
+    ![amount, rate, fee].every(Number.isFinite) ||
+    amount < 0 ||
+    rate <= 0 ||
+    fee < 0
+  ) {
+    $("total").textContent = "—";
+    $("breakdown").textContent =
+      "請填寫有效金額、正數匯率及非負手續費";
+    return;
+  }
+
+  const result = calculate(amount, rate, fee);
+
+  if (!Number.isFinite(result.total)) {
+    $("total").textContent = "—";
+    $("breakdown").textContent = "數字過大，請縮小金額後重試";
+    return;
+  }
+
+  $("total").textContent = "NT$ " + money(result.total);
+  $("breakdown").textContent =
+    `換算金額 ${money(result.base)} ＋ 手續費 ${money(result.fee)}`;
+}
+
+function autoRate() {
+  const records = selected();
+
+  $("calcRate").value = records.length
+    ? records[records.length - 1].rate
+    : "";
+
+  $("rateMode").textContent = records.length
+    ? "採用所選月份最新一筆"
+    : "無資料，請自行輸入匯率";
+
+  calc();
+}
+
+function resetForm() {
+  editing = null;
+  $("date").disabled = false;
+  $("rate").value = "";
+  $("source").value = "";
+  $("saveBtn").textContent = "新增紀錄";
+  $("cancelBtn").hidden = true;
+}
+
+function showPoint(record) {
+  $("chartInfo").textContent =
+    `${record.date} ｜ 1 CNY = ${record.rate.toFixed(4)} TWD` +
+    ` ｜ ${record.source}`;
+}
+
+// 使用 SVG 繪製圖表，不需要外部套件
+function draw(records) {
+  const box = $("chart");
+  box.replaceChildren();
+
+  $("chartInfo").textContent =
+    "點選圖表資料點，查看詳細匯率。";
+
+  if (!records.length) {
+    box.innerHTML =
+      '<div class="empty">尚無走勢資料<br>從下方新增紀錄開始。</div>';
+    return;
+  }
+
+  const namespace = "http://www.w3.org/2000/svg";
+
+  function el(tag, attributes, text) {
+    const node = document.createElementNS(namespace, tag);
+
+    for (const [key, value] of Object.entries(attributes)) {
+      node.setAttribute(key, value);
+    }
+
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+
+  const svg = el("svg", {
+    viewBox: "0 0 650 280",
+    role: "img",
+    "aria-label": "每月匯率折線圖，詳細數值亦列於下方表格"
+  });
+
+  let low = Math.min(...records.map(r => r.rate));
+  let high = Math.max(...records.map(r => r.rate));
+  const padding = Math.max((high - low) * .2, low * .001, .001);
+
+  low -= padding;
+  high += padding;
+
+  const first = Date.parse(records[0].date);
+  const last = Date.parse(records[records.length - 1].date);
+
+  const x = record => last === first
+    ? 355
+    : 64 + (Date.parse(record.date) - first) / (last - first) * 556;
+
+  const y = record =>
+    225 - (record.rate - low) / (high - low) * 195;
+
+  for (let i = 0; i < 5; i++) {
+    const py = 30 + i * 195 / 4;
+
+    svg.append(
+      el("line", {
+        x1: 64,
+        x2: 620,
+        y1: py,
+        y2: py,
+        stroke: "#e5ece5"
+      }),
+      el("text", {
+        x: 55,
+        y: py + 4,
+        "text-anchor": "end"
+      }, (high - i * (high - low) / 4).toFixed(4))
+    );
+  }
+
+  const points = records
+    .map(record => `${x(record)},${y(record)}`)
+    .join(" ");
+
+  svg.append(
+    el("polygon", {
+      points:
+        `${x(records[0])},225 ${points} ` +
+        `${x(records[records.length - 1])},225`,
+      fill: "#e7f2e9"
+    }),
+    el("polyline", {
+      points,
+      fill: "none",
+      stroke: "#277452",
+      "stroke-width": 3
+    })
+  );
+
+  records.forEach((record, index) => {
+    const dot = el("circle", {
+      cx: x(record),
+      cy: y(record),
+      r: 5,
+      fill: "#fff",
+      stroke: "#277452",
+      "stroke-width": 2,
+      tabindex: 0,
+      role: "button",
+      "aria-label": `${record.date} 匯率 ${record.rate}`
+    });
+
+    dot.append(
+      el("title", {}, `${record.date}：${record.rate.toFixed(4)}`)
+    );
+
+    dot.onclick = () => showPoint(record);
+    dot.onfocus = () => showPoint(record);
+
+    dot.onkeydown = event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        showPoint(record);
+      }
+    };
+
+    svg.append(dot);
+
+    if (
+      index === 0 ||
+      index === records.length - 1 ||
+      (records.length > 3 && index === Math.floor(records.length / 2))
+    ) {
+      svg.append(
+        el("text", {
+          x: x(record),
+          y: 252,
+          "text-anchor": "middle"
+        }, record.date.slice(5))
+      );
+    }
+  });
+
+  box.append(svg);
+}
+
+// 更新統計、圖表及資料表格
+function render() {
+  const records = selected();
+  const stats = summarize(records);
+
+  $("notice").textContent = $("mode").value === "demo"
+    ? "模擬資料模式｜以下為教學展示數值，不是真實市場匯率，與正式資料分開保存。"
+    : "正式資料模式｜由你手動輸入及查證；本站不提供即時報價。";
+
+  $("chartMonth").textContent = $("month").value || "請選月份";
+
+  for (const [id, key] of [
+    ["latest", "last"],
+    ["high", "high"],
+    ["low", "low"],
+    ["average", "average"]
+  ]) {
+    $(id).textContent = stats
+      ? (key === "last" ? stats.last.rate : stats[key]).toFixed(4)
+      : "—";
+  }
+
+  $("latestDate").textContent = stats
+    ? stats.last.date + " · TWD / CNY"
+    : "尚無資料";
+
+  $("count").textContent = records.length + " 筆每日紀錄";
+
+  if (stats && stats.delta !== null) {
+    const direction = stats.delta > 0
+      ? "上升"
+      : stats.delta < 0 ? "下降" : "持平";
+
+    $("change").textContent =
+      `月內${direction} ${Math.abs(stats.delta).toFixed(4)}` +
+      `（${stats.percent >= 0 ? "+" : ""}${stats.percent.toFixed(2)}%）` +
+      ` · ${records[0].date.slice(5)} → ${stats.last.date.slice(5)}`;
+  } else {
+    $("change").textContent =
+      "資料不足：至少兩筆資料才能比較月內變動。";
+  }
+
+  draw(records);
+  $("rows").replaceChildren();
+  $("empty").hidden = !!records.length;
+
+  [...records].reverse().forEach(record => {
+    const tr = document.createElement("tr");
+
+    [record.date, record.rate.toFixed(4), record.source]
+      .forEach((text, index) => {
+        const td = document.createElement("td");
+        td.textContent = text;
+
+        if (index === 2) td.className = "source";
+        tr.append(td);
+      });
+
+    const actions = document.createElement("td");
+
+    const edit = document.createElement("button");
+    edit.textContent = "編輯";
+    edit.className = "small";
+
+    edit.onclick = () => {
+      editing = record.date;
+      $("date").value = record.date;
+      $("date").disabled = true;
+      $("rate").value = record.rate;
+      $("source").value = record.source;
+      $("saveBtn").textContent = "儲存修改";
+      $("cancelBtn").hidden = false;
+      $("rate").focus();
+    };
+
+    const remove = document.createElement("button");
+    remove.textContent = "刪除";
+    remove.className = "small danger";
+    remove.style.marginLeft = "8px";
+
+    remove.onclick = () => {
+      if (!confirm(`確定刪除 ${record.date} 的紀錄？`)) return;
+
+      db[$("mode").value] = db[$("mode").value]
+        .filter(item => item.date !== record.date);
+
+      if (editing === record.date) resetForm();
+
+      const ok = persist();
+      render();
+
+      $("status").textContent = ok
+        ? "已刪除並儲存。"
+        : "已刪除；永久儲存失敗，請匯出備份。";
+    };
+
+    actions.append(edit, remove);
+    tr.append(actions);
+    $("rows").append(tr);
+  });
+
+  if (!manual) autoRate();
+  else calc();
+}
+
+// 新增及修改紀錄
+$("entry").onsubmit = event => {
+  event.preventDefault();
+
+  const date = editing || $("date").value;
+  const rate = Number($("rate").value);
+  const source = $("source").value.trim();
+
+  if (
+    !validDate(date) ||
+    !Number.isFinite(rate) ||
+    rate <= 0 ||
+    !source
+  ) {
+    $("status").textContent = "請填寫有效日期、正數匯率與來源。";
+    return;
+  }
+
+  const list = db[$("mode").value];
+  const index = list.findIndex(record => record.date === date);
+
+  if (
+    index >= 0 &&
+    !editing &&
+    !confirm("該日期已有紀錄，是否覆蓋更新？")
+  ) {
+    return;
+  }
+
+  const record = { date, rate, source };
+
+  if (index < 0) list.push(record);
+  else list[index] = record;
+
+  $("month").value = date.slice(0, 7);
+
+  const ok = persist();
+  resetForm();
+  render();
+
+  $("status").textContent = ok
+    ? "紀錄已儲存，圖表與統計已更新。"
+    : "紀錄已更新；永久儲存失敗，請匯出備份。";
+};
+
+$("cancelBtn").onclick = resetForm;
+
+// 預設使用今天及當月
+$("month").value = today.slice(0, 7);
+$("date").value = today;
+
+$("month").onchange = () => {
+  if (!$("month").value) $("month").value = today.slice(0, 7);
+
+  resetForm();
+
+  $("date").value = $("month").value === today.slice(0, 7)
+    ? today
+    : $("month").value + "-01";
+
+  $("status").textContent = "";
+  render();
+};
+
+$("mode").onchange = () => {
+  resetForm();
+  $("status").textContent = "";
+  render();
+};
+
+// 產生模擬資料，與正式資料分開保存
+$("demoBtn").onclick = () => {
+  const month = $("month").value;
+  if (!/^\d{4}-\d{2}$/.test(month)) return;
+
+  const current = db.demo.filter(record =>
+    record.date.startsWith(month)
+  );
+
+  if (
+    current.length &&
+    !confirm("將重建所選月份的模擬資料，是否繼續？")
+  ) {
+    return;
+  }
+
+  const [year, monthNumber] = month.split("-").map(Number);
+
+  const days = month === today.slice(0, 7)
+    ? Number(today.slice(8))
+    : new Date(year, monthNumber, 0).getDate();
+
+  db.demo = db.demo.filter(record =>
+    !record.date.startsWith(month)
+  );
+
+  for (let day = 1; day <= days; day++) {
+    db.demo.push({
+      date: month + "-" + String(day).padStart(2, "0"),
+      rate: Number(
+        (4.47 + Math.sin(day * .55) * .025 + day * .0012)
+          .toFixed(4)
+      ),
+      source: "教學模擬資料（非真實報價）"
+    });
+  }
+
+  $("mode").value = "demo";
+  resetForm();
+  manual = false;
+
+  const ok = persist();
+  render();
+
+  $("status").textContent = ok
+    ? "已載入所選月份模擬資料。"
+    : "模擬資料已載入；永久儲存失敗。";
+};
+
+// 即時換算
+for (const id of ["amount", "fee"]) {
+  $(id).oninput = calc;
+}
+
+$("calcRate").oninput = () => {
+  manual = true;
+  $("rateMode").textContent = "使用自訂試算匯率";
+  calc();
+};
+
+$("useLatest").onclick = () => {
+  manual = false;
+  autoRate();
+};
+
+// 匯出所選月份資料
+$("exportBtn").onclick = () => {
+  const records = selected();
+
+  if (!records.length) {
+    $("status").textContent = "沒有可匯出的資料。";
+    return;
+  }
+
+  const quote = value =>
+    '"' +
+    String(value)
+      .replace(/^[=+@-]/, "'$&")
+      .replace(/"/g, '""') +
+    '"';
+
+  const csvRows = [
+    ["日期", "1 CNY 等於 TWD", "來源", "資料模式"],
+    ...records.map(record => [
+      record.date,
+      record.rate,
+      record.source,
+      $("mode").value === "demo" ? "模擬資料" : "正式資料"
+    ])
+  ];
+
+  const csv = "\ufeff" + csvRows
+    .map(row => row.map(quote).join(","))
+    .join("\r\n");
+
+  const url = URL.createObjectURL(
+    new Blob([csv], { type: "text/csv;charset=utf-8" })
+  );
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download =
+    `匯率紀錄-${$("mode").value}-${$("month").value}.csv`;
+
+  document.body.append(link);
+  link.click();
+  link.remove();
+
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
+
+render();
+</script>
+</body>
+</html>
