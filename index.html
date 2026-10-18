@@ -443,7 +443,10 @@ summary { cursor: pointer; font-weight: 650; }
       <p class="sub">輸入人民幣金額，試算新臺幣支出。</p>
 
       <div class="field">
-        <label for="amount">人民幣金額（CNY）</label>
+<label for="direction">換算方向</label>
+<select id="direction"><option value="cny">人民幣 → 新臺幣（總支出）</option><option value="twd">新臺幣 → 人民幣（含手續費預算）</option></select>
+</div>
+<div class="field"><label for="amount" id="amountLabel">人民幣金額（CNY）</label>
         <input id="amount" type="number"
                min="0" step="any" value="100" required>
       </div>
@@ -469,18 +472,34 @@ summary { cursor: pointer; font-weight: 650; }
       </div>
 
       <div class="result" aria-live="polite">
-        <div class="label">預估總支出 · TWD</div>
+        <div class="label" id="resultLabel">預估總支出 · TWD</div>
         <strong id="total">—</strong>
         <small id="breakdown">輸入有效數字即可換算</small>
       </div>
 
       <p class="sub" style="margin-top:12px">
-        手續費按換算後金額計算；實際成交依銀行或支付平台為準。
+        <span id="calcNote">手續費按換算後金額計算；實際成交依銀行或支付平台為準。</span>
       </p>
     </section>
   </div>
 
-  <section class="card records">
+  <section class="card records" aria-labelledby="compareTitle">
+<h2 id="compareTitle">兩種匯率，支出差多少？</h2>
+<p class="sub">相同人民幣商品金額、相同手續費下的比較。匯率均為 1 CNY = 多少 TWD；預填 4.4、4.5 僅為示例。</p>
+<div class="stats">
+<div class="field"><label for="compareAmount">商品金額（CNY）</label><input id="compareAmount" type="number" min="0" step="any" value="100" required></div>
+<div class="field"><label for="rateA">方案 A 匯率</label><input id="rateA" type="number" min="0.00000001" step="any" value="4.4" required></div>
+<div class="field"><label for="rateB">方案 B 匯率</label><input id="rateB" type="number" min="0.00000001" step="any" value="4.5" required></div>
+<div class="field"><label for="compareFee">共同手續費（%）</label><input id="compareFee" type="number" min="0" step="any" value="1" required></div>
+</div>
+<div class="pair" aria-live="polite">
+<div class="change">方案 A 總支出<strong id="costA" style="display:block;font-size:24px">—</strong><span class="sub" id="detailA"></span></div>
+<div class="change">方案 B 總支出<strong id="costB" style="display:block;font-size:24px">—</strong><span class="sub" id="detailB"></span></div>
+</div>
+<div class="change" id="comparison" role="status"></div>
+<p class="sub">此區獨立於上方換算區，不寫入匯率紀錄。以原始數值計算，最後顯示至小數點後兩位。</p>
+</section>
+<section class="card records">
     <div class="row">
       <div>
         <h2>每日匯率紀錄</h2>
@@ -684,39 +703,61 @@ function calculate(amount, rate, fee) {
 }
 
 // 更新換算結果
+function reverseCalculate(budget, rate, fee) {
+  const base = budget / (1 + fee / 100);
+  return {base, fee: budget - base, received: base / rate};
+}
 function calc() {
-  const amount = Number($("amount").value);
-  const rate = Number($("calcRate").value);
-  const fee = Number($("fee").value);
-
-  const invalidInput = ["amount", "calcRate", "fee"].some(
-    id => !$(id).value || !$(id).checkValidity()
-  );
-
-  if (
-    invalidInput ||
-    ![amount, rate, fee].every(Number.isFinite) ||
-    amount < 0 ||
-    rate <= 0 ||
-    fee < 0
-  ) {
+  const reverse = $("direction").value === "twd";
+  $("amountLabel").textContent = reverse ? "新臺幣總預算（TWD，含手續費）" : "人民幣金額（CNY）";
+  $("resultLabel").textContent = reverse ? "預估可換得 · CNY" : "預估總支出 · TWD";
+  $("calcNote").textContent = reverse
+    ? "總預算包含手續費；先求出換匯本金，再除以匯率。手續費按本金比例計算，實際成交依平台為準。"
+    : "手續費按換算後金額計算；實際成交依銀行或支付平台為準。";
+  const amount = Number($("amount").value), rate = Number($("calcRate").value), fee = Number($("fee").value);
+  if (["amount","calcRate","fee"].some(id => !$(id).value || !$(id).checkValidity()) ||
+      ![amount,rate,fee].every(Number.isFinite) || amount < 0 || rate <= 0 || fee < 0) {
     $("total").textContent = "—";
-    $("breakdown").textContent =
-      "請填寫有效金額、正數匯率及非負手續費";
+    $("breakdown").textContent = "請填寫有效金額、正數匯率及非負手續費";
     return;
   }
-
-  const result = calculate(amount, rate, fee);
-
-  if (!Number.isFinite(result.total)) {
+  const r = reverse ? reverseCalculate(amount,rate,fee) : calculate(amount,rate,fee);
+  if (!Object.values(r).every(Number.isFinite)) {
     $("total").textContent = "—";
     $("breakdown").textContent = "數字過大，請縮小金額後重試";
     return;
   }
-
-  $("total").textContent = "NT$ " + money(result.total);
-  $("breakdown").textContent =
-    `換算金額 ${money(result.base)} ＋ 手續費 ${money(result.fee)}`;
+  $("total").textContent = reverse ? "CNY " + money(r.received) : "NT$ " + money(r.total);
+  $("breakdown").textContent = reverse
+    ? "換匯本金 NT$ " + money(r.base) + " ＋ 手續費 NT$ " + money(r.fee)
+    : "換算金額 " + money(r.base) + " ＋ 手續費 " + money(r.fee);
+}
+function compareRates() {
+  const ids = ["compareAmount","rateA","rateB","compareFee"];
+  const [amount,rateA,rateB,fee] = ids.map(id => Number($(id).value));
+  const clear = text => {
+    $("costA").textContent = $("costB").textContent = "—";
+    $("detailA").textContent = $("detailB").textContent = "";
+    $("comparison").textContent = text;
+  };
+  if (ids.some(id => !$(id).value || !$(id).checkValidity()) ||
+      ![amount,rateA,rateB,fee].every(Number.isFinite) || amount < 0 || rateA <= 0 || rateB <= 0 || fee < 0) {
+    clear("請填入非負金額、正數匯率與非負手續費。");
+    return;
+  }
+  const a = calculate(amount,rateA,fee), b = calculate(amount,rateB,fee);
+  if (![...Object.values(a),...Object.values(b)].every(Number.isFinite)) {
+    clear("數值過大，請縮小後重試。");
+    return;
+  }
+  for (const [label,r] of [["A",a],["B",b]]) {
+    $("cost"+label).textContent = "NT$ " + money(r.total);
+    $("detail"+label).textContent = "本金 " + money(r.base) + " ＋ 手續費 " + money(r.fee);
+  }
+  const diff = Math.abs(a.total-b.total);
+  $("comparison").textContent = diff < 0.005
+    ? "兩方案價差四捨五入至小數點後兩位為 NT$ 0.00。"
+    : "方案 " + (a.total < b.total ? "A" : "B") + " 較省，可少付 NT$ " + money(diff) + "。";
 }
 
 function autoRate() {
@@ -1107,7 +1148,10 @@ $("demoBtn").onclick = () => {
     : "模擬資料已載入；永久儲存失敗。";
 };
 
-// 即時換算
+// 即時換算與比較
+$("direction").onchange = calc;
+for (const id of ["compareAmount","rateA","rateB","compareFee"]) $(id).oninput = compareRates;
+compareRates();
 for (const id of ["amount", "fee"]) {
   $(id).oninput = calc;
 }
