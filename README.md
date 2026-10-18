@@ -6,6 +6,15 @@
 
 本專案為「用 Vibe Coding 做出一個互動網頁」的實作作品。透過與 AI 討論需求、整理規格、產生與檢查程式碼，再使用 GitHub Pages 公開單一 HTML 網頁。
 
+## 版本選擇
+
+| 版本 | 開啟網站 | 程式碼 | 差異 |
+| --- | --- | --- | --- |
+| 舊版 V1 | [開啟舊版](https://over-over-steak.github.io/cny-twd-exchange/old-version.html) | [old-version.html](./old-version.html) | 保留最初的單向換算、匯率圖表、統計與資料管理。 |
+| 新版 V2 | [開啟新版](https://over-over-steak.github.io/cny-twd-exchange/) | [index.html](./index.html) | 增加雙向換算與兩種匯率的支出比較。 |
+
+兩個版本皆為獨立 HTML 檔案。舊版保存原始程式內容，下載舊版後可改名為 `index.html` 使用。以下功能規格以新版為準。兩版位於同一網站時使用相同 localStorage 儲存鍵，因此在同一瀏覽器內共用匯率紀錄；任一版修改紀錄後，另一版重新整理即可讀取。
+
 ## 1. 專案目的與使用對象
 
 提供人民幣計價商品的購物試算與每月匯率紀錄工具。使用者可以整理每日人民幣兌新臺幣匯率，觀察變化，並估算商品金額及手續費換算成新臺幣後的支出。
